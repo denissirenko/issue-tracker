@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -11,13 +9,12 @@ datasource db {
 }
 
 model Issue {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-   description      String   @db.Text
-  status           Status   @default(OPEN)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  status      Status   @default(OPEN)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Status {
@@ -25,4 +22,3 @@ enum Status {
   IN_PROGRESS
   CLOSED
 }
-
