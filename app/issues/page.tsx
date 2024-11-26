@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "@radix-ui/themes";
+import { Heading, Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 import { Link, IssueStatusBadge } from "@/app/components";
 
@@ -10,6 +10,7 @@ const IssuesPage = async () => {
 
   return (
     <div>
+      <Heading className="mb-5">Issues</Heading>
       <IssueActions />
 
       <Table.Root variant="surface">
