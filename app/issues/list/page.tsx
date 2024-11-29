@@ -34,7 +34,8 @@ const IssuesPage = async ({ searchParams }: Props) => {
 
   const { status } = searchParamsValue;
 
-  const statusValue = statuses.includes(status) ? status : undefined;
+  const statusValue =
+    statuses.includes(status) && status !== "ALL" ? status : undefined;
 
   const issues = await prisma.issue.findMany({
     where: {
@@ -51,7 +52,10 @@ const IssuesPage = async ({ searchParams }: Props) => {
         <Table.Header>
           <Table.Row>
             {columns.map((column) => (
-              <Table.ColumnHeaderCell key={column.value}>
+              <Table.ColumnHeaderCell
+                key={column.value}
+                className={column.className}
+              >
                 <NextLink
                   href={{
                     query: { ...searchParamsValue, orderBy: column.value },
