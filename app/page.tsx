@@ -1,5 +1,5 @@
 import { Heading } from "@radix-ui/themes";
-import Pagination from "./components/Pagination";
+import LatestIssues from "./LatestIssues";
 
 const Home = async ({ searchParams }: { searchParams: { page: string } }) => {
   const { page } = await searchParams;
@@ -8,8 +8,8 @@ const Home = async ({ searchParams }: { searchParams: { page: string } }) => {
 
   return (
     <>
-      <Heading>Home</Heading>
-      <Pagination itemCount={100} pageSize={10} currentPage={currentPage} />
+      <Heading mb="4">Home</Heading>
+      <LatestIssues />
     </>
   );
 };
