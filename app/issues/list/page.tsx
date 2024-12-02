@@ -5,9 +5,10 @@ import { Heading, Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 import NextLink from "next/link";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import Pagination from "@/app/components/Pagination";
 
 interface Props {
-  searchParams: { status: Status; orderBy: keyof Issue };
+  searchParams: { status: Status; orderBy: keyof Issue; page: string };
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
@@ -32,16 +33,28 @@ const IssuesPage = async ({ searchParams }: Props) => {
   const statuses = Object.values(Status);
   const searchParamsValue = await searchParams;
 
-  const { status } = searchParamsValue;
+  const { status, orderBy, page } = searchParamsValue;
 
   const statusValue =
     statuses.includes(status) && status !== "ALL" ? status : undefined;
 
+  const where = statusValue ? { status: statusValue } : {};
+
+  const orderByValue = columns.map((column) => column.value).includes(orderBy)
+    ? { [orderBy]: "asc" }
+    : undefined;
+
+  const pageNumber = parseInt(page) || 1;
+  const pageSize = 10;
+
   const issues = await prisma.issue.findMany({
-    where: {
-      status: statusValue,
-    },
+    where,
+    orderBy: orderByValue,
+    skip: (pageNumber - 1) * pageSize,
+    take: pageSize,
   });
+
+  const issueCount = await prisma.issue.count({ where });
 
   return (
     <div>
@@ -63,9 +76,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
                 >
                   {column.label}
                 </NextLink>
-                {column.value === searchParamsValue.orderBy && (
-                  <ArrowUpIcon className="inline" />
-                )}
+                {column.value === orderBy && <ArrowUpIcon className="inline" />}
               </Table.ColumnHeaderCell>
             ))}
           </Table.Row>
@@ -89,6 +100,12 @@ const IssuesPage = async ({ searchParams }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
+
+      <Pagination
+        pageSize={pageSize}
+        currentPage={pageNumber}
+        itemCount={issueCount}
+      />
     </div>
   );
 };
